@@ -161,14 +161,6 @@ GxEPD_Class display(io /*RST=9*/ /*BUSY=7*/); // default selection of (9), 7
 #include <RCSwitch.h>
 RCSwitch mySwitch = RCSwitch();
 
-uint32_t start_time;
-uint32_t next_time;
-uint32_t previous_time;
-uint32_t previous_full_update;
-
-uint32_t total_seconds = 0;
-uint32_t seconds, minutes, hours, days;
-
 void setup()
 {
   Serial.begin(115200);
@@ -186,12 +178,12 @@ void setup()
 void loop()
 {
   //showBitmapExample();
-  showPartialUpdate();
+
   if (mySwitch.available()) {
     
-    //display.drawPaged(showPartialUpdate);
+    display.drawPaged(showTest);
 
-    //mySwitch.resetAvailable();
+    mySwitch.resetAvailable();
   }
 
   /*
@@ -225,9 +217,245 @@ void showBitmapExample()
 }
 #endif
 
+#if defined(_GxGDEW0154Z04_H_)
+#define HAS_RED_COLOR
+void showBitmapExample()
+{
+#if !defined(__AVR)
+  display.drawPicture(BitmapWaveshare_black, BitmapWaveshare_red, sizeof(BitmapWaveshare_black), sizeof(BitmapWaveshare_red), GxEPD::bm_normal);
+  delay(5000);
+#endif
+  display.drawExamplePicture(BitmapExample1, BitmapExample2, sizeof(BitmapExample1), sizeof(BitmapExample2));
+  delay(5000);
+}
+#endif
 
+#if defined(_GxGDEW0154Z17_H_)
+#define HAS_RED_COLOR
+void showBitmapExample()
+{
+  display.drawExamplePicture(BitmapExample1, BitmapExample2, sizeof(BitmapExample1), sizeof(BitmapExample2));
+  delay(5000);
+  display.drawExamplePicture(BitmapExample3, BitmapExample4, sizeof(BitmapExample1), sizeof(BitmapExample2));
+  delay(5000);
+  //display.drawBitmap(BitmapExample2, sizeof(BitmapExample2));
+}
+#endif
 
+#if defined(_GxGDE0213B1_H_)
+void showBitmapExample()
+{
+  display.drawBitmap(BitmapExample1, sizeof(BitmapExample1));
+  delay(2000);
+  display.drawBitmap(BitmapExample2, sizeof(BitmapExample2));
+  delay(5000);
+#if !defined(__AVR)
+  display.drawBitmap(first, sizeof(first));
+  delay(5000);
+  display.drawBitmap(second, sizeof(second));
+  delay(5000);
+  display.drawBitmap(third, sizeof(third));
+  delay(5000);
+#endif
+  display.fillScreen(GxEPD_WHITE);
+  display.drawBitmap(BitmapExample1, 0, 0, GxEPD_WIDTH, GxEPD_HEIGHT, GxEPD_BLACK);
+  display.update();
+  delay(5000);
+  showBoat();
+}
+#endif
 
+#if defined(_GxGDEW0213Z16_H_)
+#define HAS_RED_COLOR
+void showBitmapExample()
+{
+  display.drawPicture(BitmapWaveshare_black, BitmapWaveshare_red, sizeof(BitmapWaveshare_black), sizeof(BitmapWaveshare_red));
+  delay(5000);
+  display.drawExamplePicture(BitmapExample1, BitmapExample2, sizeof(BitmapExample1), sizeof(BitmapExample2));
+  delay(5000);
+#if !defined(__AVR)
+  display.drawExamplePicture(BitmapExample3, BitmapExample4, sizeof(BitmapExample3), sizeof(BitmapExample4));
+  delay(5000);
+#endif
+  display.drawExampleBitmap(BitmapWaveshare_black, sizeof(BitmapWaveshare_black));
+  delay(2000);
+  // example bitmaps for b/w/r are normal on b/w, but inverted on red
+  display.drawExampleBitmap(BitmapExample1, sizeof(BitmapExample1));
+  delay(2000);
+  display.drawExampleBitmap(BitmapExample2, sizeof(BitmapExample2), GxEPD::bm_invert);
+  delay(2000);
+  display.drawExampleBitmap(BitmapExample1, 0, 0, GxEPD_WIDTH, GxEPD_HEIGHT, GxEPD_BLACK);
+  display.update();
+}
+#endif
+
+#if defined(_GxGDEH029A1_H_)
+void showBitmapExample()
+{
+  display.drawExampleBitmap(BitmapExample1, sizeof(BitmapExample1));
+  delay(2000);
+  display.drawExampleBitmap(BitmapExample2, sizeof(BitmapExample2));
+  delay(5000);
+  display.fillScreen(GxEPD_WHITE);
+  display.drawExampleBitmap(BitmapExample1, 0, 0, GxEPD_WIDTH, GxEPD_HEIGHT, GxEPD_BLACK);
+  display.update();
+  delay(5000);
+  showBoat();
+}
+#endif
+
+#if defined(_GxGDEW029Z10_H_)
+#define HAS_RED_COLOR
+void showBitmapExample()
+{
+#if defined(__AVR)
+  display.drawExamplePicture(BitmapExample1, BitmapExample2, sizeof(BitmapExample1), sizeof(BitmapExample2));
+  delay(5000);
+#else
+  display.drawPicture(BitmapWaveshare_black, BitmapWaveshare_red, sizeof(BitmapWaveshare_black), sizeof(BitmapWaveshare_red));
+  delay(5000);
+  display.drawExamplePicture(BitmapExample1, BitmapExample2, sizeof(BitmapExample1), sizeof(BitmapExample2));
+  delay(5000);
+  display.drawExamplePicture(BitmapExample3, BitmapExample4, sizeof(BitmapExample3), sizeof(BitmapExample4));
+  delay(5000);
+  display.drawExampleBitmap(BitmapWaveshare_black, sizeof(BitmapWaveshare_black));
+  delay(2000);
+  // example bitmaps for b/w/r are normal on b/w, but inverted on red
+  display.drawExampleBitmap(BitmapExample1, sizeof(BitmapExample1));
+  delay(2000);
+  display.drawExampleBitmap(BitmapExample2, sizeof(BitmapExample2), GxEPD::bm_invert);
+  delay(2000);
+#endif
+  display.drawExampleBitmap(BitmapExample1, 0, 0, GxEPD_WIDTH, GxEPD_HEIGHT, GxEPD_BLACK);
+  display.update();
+}
+#endif
+
+#if defined(_GxGDEW027C44_H_)
+#define HAS_RED_COLOR
+void showBitmapExample()
+{
+  // draw black and red bitmap
+  display.drawPicture(BitmapExample1, BitmapExample2, sizeof(BitmapExample1), sizeof(BitmapExample2));
+  delay(5000);
+  return;
+  display.drawBitmap(BitmapExample1, sizeof(BitmapExample1));
+  delay(2000);
+  display.fillScreen(GxEPD_WHITE);
+  display.drawBitmap(0, 0, BitmapExample1, GxEPD_WIDTH, GxEPD_HEIGHT, GxEPD_BLACK);
+  display.update();
+}
+#endif
+
+#if defined(_GxGDEW027W3_H_)
+void showBitmapExample()
+{
+  display.drawExampleBitmap(BitmapExample1, sizeof(BitmapExample1));
+  delay(2000);
+#if !defined(__AVR)
+  display.drawExampleBitmap(BitmapExample2, sizeof(BitmapExample2));
+#endif
+  delay(2000);
+  display.drawExampleBitmap(BitmapWaveshare, sizeof(BitmapWaveshare));
+  delay(5000);
+  display.fillScreen(GxEPD_WHITE);
+  display.drawExampleBitmap(BitmapExample1, 0, 0, GxEPD_WIDTH, GxEPD_HEIGHT, GxEPD_BLACK);
+  display.update();
+}
+#endif
+
+#if defined(_GxGDEW042T2_H_) || defined(_GxGDEW042T2_FPU_H_)
+void showBitmapExample()
+{
+#if defined(__AVR)
+  display.drawBitmap(BitmapExample1, sizeof(BitmapExample1));
+#else
+  display.drawExampleBitmap(BitmapExample1, sizeof(BitmapExample1));
+  delay(2000);
+  display.drawExampleBitmap(BitmapExample2, sizeof(BitmapExample2));
+  delay(5000);
+  display.fillScreen(GxEPD_WHITE);
+  display.drawExampleBitmap(BitmapExample1, 0, 0, GxEPD_WIDTH, GxEPD_HEIGHT, GxEPD_BLACK);
+  display.update();
+#endif
+}
+#endif
+
+#if defined(_GxGDEW042Z15_H_)
+#define HAS_RED_COLOR
+void showBitmapExample()
+{
+#if defined(__AVR)
+  display.drawBitmap(BitmapExample1, sizeof(BitmapExample1));
+#else
+  // draw black and red bitmap
+  display.drawPicture(BitmapExample1, BitmapExample2, sizeof(BitmapExample1), sizeof(BitmapExample2));
+  delay(5000);
+  display.drawPicture(BitmapExample3, BitmapExample4, sizeof(BitmapExample3), sizeof(BitmapExample4));
+  delay(5000);
+  display.drawPicture(BitmapWaveshare_black, BitmapWaveshare_red, sizeof(BitmapWaveshare_black), sizeof(BitmapWaveshare_red));
+  delay(5000);
+  display.drawBitmap(BitmapExample1, sizeof(BitmapExample1));
+  delay(2000);
+  display.drawExampleBitmap(BitmapExample1, 0, 0, GxEPD_WIDTH, GxEPD_HEIGHT, GxEPD_BLACK);
+  display.update();
+#endif
+}
+#endif
+
+#if defined(_GxGDEW0583T7_H_)
+void showBitmapExample()
+{
+#if defined(__AVR)
+  //display.drawBitmap(BitmapExample1, sizeof(BitmapExample1));
+#else
+  display.drawExampleBitmap(BitmapExample1, sizeof(BitmapExample1));
+  delay(2000);
+  display.fillScreen(GxEPD_WHITE);
+  display.drawExampleBitmap(BitmapExample1, 0, 0, GxEPD_WIDTH, GxEPD_HEIGHT, GxEPD_BLACK);
+  display.update();
+#endif
+}
+#endif
+
+#if defined(_GxGDEW075T8_H_)
+void showBitmapExample()
+{
+#if defined(__AVR)
+  display.drawBitmap(BitmapExample1, sizeof(BitmapExample1));
+#else
+  display.drawExampleBitmap(BitmapExample1, sizeof(BitmapExample1));
+  delay(2000);
+  display.drawExampleBitmap(BitmapExample2, sizeof(BitmapExample2));
+  delay(5000);
+  display.fillScreen(GxEPD_WHITE);
+  display.drawExampleBitmap(BitmapExample1, 0, 0, GxEPD_WIDTH, GxEPD_HEIGHT, GxEPD_BLACK);
+  display.update();
+#endif
+}
+#endif
+
+#if defined(_GxGDEW075Z09_H_)
+#define HAS_RED_COLOR
+void showBitmapExample()
+{
+#if defined(__AVR)
+  display.drawBitmap(BitmapExample1, sizeof(BitmapExample1));
+#elif defined(ARDUINO_GENERIC_STM32F103C)
+  display.drawBitmap(BitmapExample1, sizeof(BitmapExample1));
+#elif defined(ARDUINO_GENERIC_STM32F103V)
+  display.drawExampleBitmap(BitmapExample1, sizeof(BitmapExample1));
+  delay(2000);
+  display.drawExamplePicture_3C(BitmapPicture_3C, sizeof(BitmapPicture_3C));
+#else
+  display.drawExampleBitmap(BitmapExample1, sizeof(BitmapExample1));
+  delay(2000);
+  display.drawExampleBitmap(BitmapExample2, sizeof(BitmapExample2));
+  delay(5000);
+  display.drawExamplePicture_3C(BitmapPicture_3C, sizeof(BitmapPicture_3C));
+#endif
+}
+#endif
 
 void showFont(const char name[], const GFXfont* f)
 {
@@ -279,7 +507,7 @@ void showTest()
     //display.fillScreen(GxEPD_WHITE);
     display.setTextColor(GxEPD_BLACK);
     display.setFont(f);
-    display.setCursor(0, 10);
+    display.setCursor(5, 10);
     display.println();
     //display.println(name);
     display.println("On 433 Mhz: ");
@@ -314,35 +542,6 @@ void showTest()
     }
 
   
-}
-
-void print02d(uint32_t d)
-{
-  if (d < 10) display.print("0");
-  display.print(d);
-}
-
-
-void drawCallback()
-{
-  uint16_t box_x = 10;
-  uint16_t box_y = 15;
-  uint16_t box_w = 170;
-  uint16_t box_h = 20;
-  uint16_t cursor_y = box_y + 16;
-  display.fillRect(box_x, box_y, box_w, box_h, GxEPD_WHITE);
-  display.setCursor(box_x, cursor_y);
-  display.print(days); display.print("d "); print02d(hours); display.print(":"); print02d(minutes); display.print(":"); print02d(seconds);
-}
-
-void showPartialUpdate()
-{
-  uint16_t box_x = 10;
-  uint16_t box_y = 15;
-  uint16_t box_w = 170;
-  uint16_t box_h = 20;
-  uint16_t cursor_y = box_y + 14;
-  display.drawPagedToWindow(drawCallback, box_x, box_y, box_w, box_h);
 }
 
 void drawCornerTest()
