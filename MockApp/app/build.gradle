@@ -22,6 +22,12 @@ android {
     }
 }
 
+repositories {
+    maven { url "https://repo.eclipse.org/content/repositories/paho-releases/" }
+    maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
+    google()
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
@@ -31,4 +37,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation 'no.nordicsemi.android:dfu:1.0.4'
+    implementation(group: 'org.eclipse.paho', name: 'org.eclipse.paho.android.service', version: '1.0.2') {
+        exclude module: 'support-v4'
+    }
 }
