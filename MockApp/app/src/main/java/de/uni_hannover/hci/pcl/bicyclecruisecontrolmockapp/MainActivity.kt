@@ -1,8 +1,9 @@
 package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp
 
+import android.net.Uri
 import android.support.design.widget.TabLayout
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -15,40 +16,45 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_main.view.*
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.Fragments.BLEManageFragment
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.Fragments.BicycleEmulatedFragment
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.Fragments.SensorInputFragment
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), BLEManageFragment.OnBLEManageFragmentInteractionListener, SensorInputFragment.OnSensorInputFragmentInteractionListener, BicycleEmulatedFragment.OnBicycleEmulatedFragmentInteractionListener {
 
     /**
      * The [android.support.v4.view.PagerAdapter] that will provide
      * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
+     * [FragmentPagerAdapter] derivative, which will keep every
      * loaded fragment in memory. If this becomes too memory intensive, it
      * may be best to switch to a
      * [android.support.v4.app.FragmentStatePagerAdapter].
      */
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
 
+    /**
+     * The [ViewPager] that will host the section contents.
+     */
+    private var mViewPager: ViewPager? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
         // Set up the ViewPager with the sections adapter.
-        container.adapter = mSectionsPagerAdapter
+        mViewPager = findViewById<View>(R.id.container) as ViewPager
+        mViewPager!!.adapter = mSectionsPagerAdapter
 
-        container.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
-        tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
+        val tabLayout = findViewById<View>(R.id.tabs) as TabLayout
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
+        mViewPager!!.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
+        tabLayout.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(mViewPager))
 
     }
 
@@ -65,30 +71,15 @@ class MainActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         val id = item.itemId
 
-        if (id == R.id.action_settings) {
-            return true
-        }
 
-        return super.onOptionsItemSelected(item)
+        return if (id == R.id.action_settings) {
+            true
+        } else super.onOptionsItemSelected(item)
+
     }
 
-
-    /**
-     * A [FragmentPagerAdapter] that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
-
-        override fun getItem(position: Int): Fragment {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1)
-        }
-
-        override fun getCount(): Int {
-            // Show 3 total pages.
-            return 3
-        }
+    override fun onFragmentInteraction(uri: Uri) {
+        //TODO: Implement auto generated code stub
     }
 
     /**
@@ -96,11 +87,9 @@ class MainActivity : AppCompatActivity() {
      */
     class PlaceholderFragment : Fragment() {
 
-        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+        override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                                   savedInstanceState: Bundle?): View? {
-            val rootView = inflater.inflate(R.layout.fragment_main, container, false)
-            rootView.section_label.text = getString(R.string.section_format, arguments.getInt(ARG_SECTION_NUMBER))
-            return rootView
+            return inflater!!.inflate(R.layout.fragment_main, container, false)
         }
 
         companion object {
@@ -121,6 +110,38 @@ class MainActivity : AppCompatActivity() {
                 fragment.arguments = args
                 return fragment
             }
+        }
+    }
+
+    /**
+     * A [FragmentPagerAdapter] that returns a fragment corresponding to
+     * one of the sections/tabs/pages.
+     */
+    inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+
+        override fun getItem(position: Int): Fragment {
+            // getItem is called to instantiate the fragment for the given page.
+            // Return a PlaceholderFragment (defined as a static inner class below).
+            when (position) {
+                0 -> return BLEManageFragment.newInstance("", "")
+                1 -> return BicycleEmulatedFragment.newInstance("", "")
+                2 -> return SensorInputFragment.newInstance("", "")
+            }
+            return PlaceholderFragment.newInstance(position + 1)
+        }
+
+        override fun getCount(): Int {
+            // Show 3 total pages.
+            return 3
+        }
+
+        override fun getPageTitle(position: Int): CharSequence? {
+            when (position) {
+                0 -> return "BLE Manager"
+                1 -> return "Bicycle Monitor"
+                2 -> return "TODO"
+            }
+            return null
         }
     }
 }
