@@ -1,4 +1,4 @@
-package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.ble;
+package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.blemanagement;
 
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import java.nio.charset.Charset;
 
-import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.BluetoothConnection.UartInterfaceActivity;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.bluetoothconnection.UartInterfaceActivity;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.CommonHelpActivity;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.R;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.settings.ConnectedSettingsActivity;

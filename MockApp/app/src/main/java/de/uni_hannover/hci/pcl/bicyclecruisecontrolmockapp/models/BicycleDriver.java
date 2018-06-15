@@ -1,4 +1,4 @@
-package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.Model;
+package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.models;
 
 /**
  * Model that holds the current status of the bicycle driver (simulated).
@@ -28,20 +28,20 @@ public class BicycleDriver {
     /**
      * Current value of drivers heart rate (simulated)
      */
-    private double heartRate;
+    private long heartRate;
 
     /**
      * Current value of drivers speed (simulated)
      */
-    private double speed;
+    private long speed;
 
-    public BicycleDriver(int groupId, double heartRate, double speed) {
+    public BicycleDriver(int groupId, long heartRate, long speed) {
         this.groupId = groupId;
         this.heartRate = heartRate;
         this.speed = speed;
     }
 
-    public BicycleDriver(int groupId, String name, int driverId, double heartRate, double speed) {
+    public BicycleDriver(int groupId, String name, int driverId, long heartRate, long speed) {
         this.groupId = groupId;
         this.name = name;
         this.driverId = driverId;
@@ -81,19 +81,19 @@ public class BicycleDriver {
         this.driverId = id;
     }
 
-    public double getHeartRate() {
+    public long getHeartRate() {
         return heartRate;
     }
 
-    public void setHeartRate(double heartRate) {
+    public void setHeartRate(long heartRate) {
         this.heartRate = heartRate;
     }
 
-    public double getSpeed() {
+    public long getSpeed() {
         return speed;
     }
 
-    public void setSpeed(double speed) {
+    public void setSpeed(long speed) {
         this.speed = speed;
     }
 

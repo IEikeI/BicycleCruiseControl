@@ -14,7 +14,7 @@ import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.BluetoothConnection.UartActivity;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.bluetoothconnection.UartActivity;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.BuildConfig;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.R;
 

@@ -1,4 +1,4 @@
-package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.BluetoothConnection;
+package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.bluetoothconnection;
 
 class UartDataChunk {
     static final int TRANSFERMODE_TX = 0;

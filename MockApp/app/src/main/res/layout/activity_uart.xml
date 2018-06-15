@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.BluetoothConnection.UartActivity">
+    tools:context="de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.bluetoothconnection.UartActivity">
     <!-- TODO: fix the default colors -->
 
     <LinearLayout

@@ -1,11 +1,11 @@
-package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.ble;
+package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.blemanagement;
 
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.BluetoothConnection.UartInterfaceActivity;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.bluetoothconnection.UartInterfaceActivity;
 
 public class KnownUUIDs extends StandardUUIDs {
 

@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.Fragments;
+package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.fragments;
 
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -75,12 +74,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.BluetoothConnection.UartActivity;
-import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.BluetoothConnection.UartInterfaceActivity;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.bluetoothconnection.UartActivity;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.bluetoothconnection.UartInterfaceActivity;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.InfoActivity;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.R;
-import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.ble.BeaconActivity;
-import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.ble.BleDevicesScanner;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.blemanagement.BeaconActivity;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.blemanagement.BleDevicesScanner;
 import android.bluetooth.BluetoothDevice;
 
 import java.io.UnsupportedEncodingException;
@@ -92,8 +91,8 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.UUID;
 
-import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.ble.BleManager;
-import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.ble.BleUtils;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.blemanagement.BleManager;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.blemanagement.BleUtils;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.ui.utils.DialogUtils;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.ui.utils.ExpandableHeightExpandableListView;
 

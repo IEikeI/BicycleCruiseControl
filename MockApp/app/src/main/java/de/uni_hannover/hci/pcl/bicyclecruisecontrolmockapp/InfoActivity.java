@@ -28,9 +28,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.ble.BleManager;
-import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.ble.BleUtils;
-import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.ble.KnownUUIDs;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.blemanagement.BleManager;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.blemanagement.BleUtils;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.blemanagement.KnownUUIDs;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.settings.ConnectedSettingsActivity;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.ui.utils.ExpandableHeightListView;
 

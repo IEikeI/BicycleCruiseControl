@@ -1,6 +1,6 @@
 // Original source code: https://github.com/StevenRudenko/BleSensorTag. MIT License (Steven Rudenko)
 
-package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.ble;
+package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.blemanagement;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;

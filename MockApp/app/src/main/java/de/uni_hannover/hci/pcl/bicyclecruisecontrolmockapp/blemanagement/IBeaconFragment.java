@@ -1,4 +1,4 @@
-package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.ble;
+package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.blemanagement;
 
 import android.app.Activity;
 import android.app.AlertDialog;

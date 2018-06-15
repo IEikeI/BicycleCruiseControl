@@ -35,7 +35,7 @@
     <string name="not_connected">Not Connected</string>
     <string name="conntected_devices">Conntected Devices:</string>
 
-    <string name="daten_des_fahrers">Daten des Fahrers</string>
+    <string name="daten_des_fahrers">Daten der Fahrer</string>
     <string name="send_manually">Send manually</string>
     <string name="warnung_zu_hoher_puls">Warnung: zu hoher Puls</string>
     <string name="_0_00">0.00</string>
@@ -44,7 +44,7 @@
     <string name="gechwindigkeit">Gechwindigkeit:</string>
     <string name="puls">Puls:</string>
     <string name="name">Name:</string>
-    <string name="id">ID:</string>
+    <string name="id">Group-ID:</string>
 
     <string name="no_yes">no/yes</string>
     <string name="daten_des_boards">Daten des Boards</string>
@@ -476,6 +476,11 @@
     <string name="dialog_notice">Notice</string>
     <string name="dialog_dontshowagain">Don\'t show again</string>
     <string name="compatible_with_adafruit_bluefruit_le">Compatible with Adafruit Bluefruit LE</string>
+    <string name="neuen_fahrer_hinzuf_gen">+ Neuen Fahrer hinzufügen</string>
+    <string name="erstelle_einen_fahrer">Erstelle einen Fahrer:</string>
+    <string name="ok">Ok</string>
+    <string name="_1">1</string>
+    <string name="_00l">10</string>
 
     <!-- Debug -->
 </resources>

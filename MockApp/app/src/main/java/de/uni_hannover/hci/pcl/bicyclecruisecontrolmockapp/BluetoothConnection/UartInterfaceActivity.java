@@ -1,4 +1,4 @@
-package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.BluetoothConnection;
+package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.bluetoothconnection;
 
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
@@ -10,8 +10,8 @@ import android.util.Log;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
-import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.ble.BleManager;
-import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.ble.BleUtils;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.blemanagement.BleManager;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.blemanagement.BleUtils;
 
 public class UartInterfaceActivity extends AppCompatActivity implements BleManager.BleManagerListener {
     // Log

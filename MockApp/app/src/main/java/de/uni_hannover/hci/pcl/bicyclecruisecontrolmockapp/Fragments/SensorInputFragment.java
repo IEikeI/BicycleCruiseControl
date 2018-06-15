@@ -1,4 +1,4 @@
-package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.Fragments;
+package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.fragments;
 
 import android.content.Context;
 import android.net.Uri;

@@ -1,4 +1,4 @@
-package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.Model;
+package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.models;
 
 /**
  * This class holds information on an used BLE Device

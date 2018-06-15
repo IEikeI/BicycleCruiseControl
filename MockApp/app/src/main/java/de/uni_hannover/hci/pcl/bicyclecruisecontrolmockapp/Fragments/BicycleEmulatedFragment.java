@@ -1,14 +1,22 @@
-package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.Fragments;
+package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.fragments;
 
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import java.util.ArrayList;
+
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.MainActivity;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.R;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.models.BicycleDriver;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.models.BicycleDriverGroup;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.utils.BicycleDriverListAdapter;
 
 
 /**
@@ -28,6 +36,12 @@ public class BicycleEmulatedFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+
+
+    private BicycleDriverGroup bicycleDriverGroup;
 
     private OnBicycleEmulatedFragmentInteractionListener mListener;
 
@@ -73,6 +87,37 @@ public class BicycleEmulatedFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View emulatedView = inflater.inflate(R.layout.fragment_bicycle_emulated, container, false);
+
+        mRecyclerView = (RecyclerView) emulatedView.findViewById(R.id.recyclerViewContacts);
+        mRecyclerView.setHasFixedSize(true);
+
+        //mLayoutManager = new LinearLayoutManager(this);
+        //mRecyclerView.setLayoutManager(mLayoutManager);
+
+        int groupId = 1;
+        bicycleDriverGroup = new BicycleDriverGroup(groupId);
+        bicycleDriverGroup.addToDriverGroup(new BicycleDriver(groupId,"Jeff", 1, 80L, 70L));
+        bicycleDriverGroup.addToDriverGroup(new BicycleDriver(groupId,"Karl", 2, 81L, 90L));
+        bicycleDriverGroup.addToDriverGroup(new BicycleDriver(groupId,"Greta", 3, 85L, 110L));
+        bicycleDriverGroup.addToDriverGroup(new BicycleDriver(groupId,"Max", 4, 70L, 75L));
+        ArrayList<BicycleDriver> dataset;
+
+        if(bicycleDriverGroup != null && bicycleDriverGroup.getBicycleDrivers().size() < 1){
+            dataset = new ArrayList<BicycleDriver>();
+        } else {
+            dataset = bicycleDriverGroup.getBicycleDrivers();
+        }
+
+        mAdapter = new BicycleDriverListAdapter(dataset, (MainActivity) getActivity());
+        mRecyclerView.setAdapter(mAdapter);
+
+        Button addDriverButton = (Button) emulatedView.findViewById(R.id.buttonAddNewDriver);
+        addDriverButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new NewDriverDialog().show(getActivity().getFragmentManager(),"newDriverDialog");
+            }
+        });
 
         return emulatedView;
     }

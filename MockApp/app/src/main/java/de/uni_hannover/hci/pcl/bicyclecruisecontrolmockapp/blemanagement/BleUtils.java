@@ -1,4 +1,4 @@
-package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.ble;
+package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.blemanagement;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
