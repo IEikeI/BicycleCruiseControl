@@ -1,5 +1,6 @@
 package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp
 
+import android.content.Intent
 import android.net.Uri
 import android.support.design.widget.TabLayout
 import android.support.v7.app.AppCompatActivity
@@ -19,6 +20,7 @@ import android.view.ViewGroup
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.Fragments.BLEManageFragment
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.Fragments.BicycleEmulatedFragment
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.Fragments.SensorInputFragment
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.settings.SettingsActivity
 
 class MainActivity : AppCompatActivity(), BLEManageFragment.OnBLEManageFragmentInteractionListener, SensorInputFragment.OnSensorInputFragmentInteractionListener, BicycleEmulatedFragment.OnBicycleEmulatedFragmentInteractionListener {
 
@@ -31,6 +33,10 @@ class MainActivity : AppCompatActivity(), BLEManageFragment.OnBLEManageFragmentI
      * [android.support.v4.app.FragmentStatePagerAdapter].
      */
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
+
+    private val kActivityRequestCode_EnableBluetooth = 1
+    private val kActivityRequestCode_Settings = 2
+    private val kActivityRequestCode_ConnectedActivity = 3
 
     /**
      * The [ViewPager] that will host the section contents.
@@ -58,7 +64,6 @@ class MainActivity : AppCompatActivity(), BLEManageFragment.OnBLEManageFragmentI
 
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -72,10 +77,34 @@ class MainActivity : AppCompatActivity(), BLEManageFragment.OnBLEManageFragmentI
         val id = item.itemId
 
 
-        return if (id == R.id.action_settings) {
-            true
+        if (id == R.id.action_settings) {
+            return true
         } else super.onOptionsItemSelected(item)
 
+        //noinspection SimplifiableIfStatement
+       if (id == R.id.action_help) {
+            startHelp()
+            return true
+        } else if (id == R.id.action_settings) {
+            val intent = Intent()
+            intent.setClass(this@MainActivity, SettingsActivity::class.java!!)
+            startActivityForResult(intent, kActivityRequestCode_Settings)
+            return true
+        } else if (id == R.id.action_licenses) {
+            val intent = Intent(this, CommonHelpActivity::class.java)
+            intent.putExtra("title", getString(R.string.licenses_title))
+            intent.putExtra("help", "licenses.html")
+            startActivity(intent)
+           return true
+        }
+        return true
+    }
+
+
+    private fun startHelp() {
+        // Launch app help activity
+        val intent = Intent(this, MainHelpActivity::class.java)
+        startActivity(intent)
     }
 
     override fun onFragmentInteraction(uri: Uri) {

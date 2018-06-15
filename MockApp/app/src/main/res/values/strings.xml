@@ -475,6 +475,7 @@
     <!-- Common -->
     <string name="dialog_notice">Notice</string>
     <string name="dialog_dontshowagain">Don\'t show again</string>
+    <string name="compatible_with_adafruit_bluefruit_le">Compatible with Adafruit Bluefruit LE</string>
 
     <!-- Debug -->
 </resources>
