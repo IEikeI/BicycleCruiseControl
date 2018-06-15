@@ -14,6 +14,9 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    //useLibrary 'org.apache.http.legacy'     // TODO: remove Apache library and use HttpURLConnection (Apache is deprecated since Android 6.0)
+
     buildTypes {
         release {
             minifyEnabled false
@@ -21,6 +24,8 @@ android {
         }
     }
 }
+
+
 
 repositories {
     maven { url "https://repo.eclipse.org/content/repositories/paho-releases/" }

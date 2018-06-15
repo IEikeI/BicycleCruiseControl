@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/uart_sentbytes_format"
-                android:textColor="@drawable/ic_stat_notify_dfu" />
+                android:textColor="@color/colorAccent" />
 
             <TextView
                 android:id="@+id/receivedBytesTextView"
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:text="@string/uart_receivedbytes_format"
-                android:textColor="@drawable/ic_stat_notify_dfu" />
+                android:textColor="@color/colorAccent" />
 
         </LinearLayout>
 
@@ -108,7 +108,7 @@
                 android:layout_weight="1"
                 android:onClick="onClickCopy"
                 android:text="@string/uart_copy"
-                android:textColor="@drawable/ic_stat_notify_dfu" />
+                android:textColor="@color/colorAccent" />
 
             <Button
                 style="?android:attr/borderlessButtonStyle"
@@ -117,7 +117,7 @@
                 android:layout_weight="1"
                 android:onClick="onClickShare"
                 android:text="@string/uart_share"
-                android:textColor="@drawable/ic_stat_notify_dfu" />
+                android:textColor="@color/colorAccent" />
 
             <Button
                 style="?android:attr/borderlessButtonStyle"
@@ -126,7 +126,7 @@
                 android:layout_weight="1"
                 android:onClick="onClickClear"
                 android:text="@string/uart_clear"
-                android:textColor="@drawable/ic_stat_notify_dfu" />
+                android:textColor="@color/colorAccent" />
 
         </LinearLayout>
     </LinearLayout>

@@ -19,6 +19,7 @@ package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.Fragments;
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -43,7 +44,6 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
@@ -79,6 +79,7 @@ import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.BluetoothConnection.U
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.BluetoothConnection.UartInterfaceActivity;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.InfoActivity;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.R;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.ble.BeaconActivity;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.ble.BleDevicesScanner;
 import android.bluetooth.BluetoothDevice;
 
@@ -99,7 +100,6 @@ import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.ui.utils.ExpandableHe
 import static android.content.Context.CLIPBOARD_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
 
-
 /**
  * This fragment controls Bluetooth to communicate with other devices.
  */
@@ -118,12 +118,13 @@ public class BLEManageFragment extends Fragment implements BleManager.BleManager
 
     // Components
     private final static int kComponentsNameIds[] = {
-            R.string.scan_connectservice_info,
-            R.string.scan_connectservice_uart,
-            R.string.scan_connectservice_pinio,
-            R.string.scan_connectservice_controller,
-            R.string.scan_connectservice_beacon,
-            R.string.scan_connectservice_neopixel,
+            //we only need UART
+            //R.string.scan_connectservice_info,
+            R.string.scan_connectservice_uart
+            //R.string.scan_connectservice_pinio,
+            //R.string.scan_connectservice_controller,
+            //R.string.scan_connectservice_beacon,
+            //R.string.scan_connectservice_neopixel,
     };
 
     // Activity request codes (used for onActivityResult)
@@ -240,22 +241,20 @@ public class BLEManageFragment extends Fragment implements BleManager.BleManager
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        /*mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (mBluetoothAdapter == null) {
             FragmentActivity activity = getActivity();
             Toast.makeText(activity, "Bluetooth is not available", Toast.LENGTH_LONG).show();
             activity.finish();
-        }
+        }*/
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
         //get the device name
-        deviceName = android.os.Build.MODEL;
-
-
+        //deviceName = android.os.Build.MODEL;
     }
 
     @Override
@@ -786,12 +785,13 @@ public class BLEManageFragment extends Fragment implements BleManager.BleManager
                 .setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (kComponentsNameIds[which]) {
-                            case R.string.scan_connectservice_info: {          // Info
-                                //mComponentToStartWhenConnected = InfoActivity.class;
+                            case R.string.scan_connectservice_uart: {          // Uart
+                                Log.e(TAG, "Zuordnen der UART-Activity");
+                                mComponentToStartWhenConnected = UartActivity.class;
                                 break;
                             }
-                            case R.string.scan_connectservice_uart: {           // Uart
-                                mComponentToStartWhenConnected = UartActivity.class;
+                            case R.string.scan_connectservice_info: {           // Info
+                                //mComponentToStartWhenConnected = InfoActivity.class;
                                 break;
                             }
                             case R.string.scan_connectservice_pinio: {        // PinIO
@@ -962,7 +962,7 @@ public class BLEManageFragment extends Fragment implements BleManager.BleManager
             mSelectedDeviceData = filteredPeripherals.get(scannedDeviceIndex);
             BluetoothDevice device = mSelectedDeviceData.device;
 
-            mBleManager.setBleListener((BleManager.BleManagerListener) getActivity());           // Force set listener (could be still checking for updates...)
+            mBleManager.setBleListener(this);           // Force set listener (could be still checking for updates...)
 
             if (mSelectedDeviceData.type == BluetoothDeviceData.kType_Uart) {      // if is uart, show all the available activities
                 showChooseDeviceServiceDialog(mSelectedDeviceData);
@@ -1243,7 +1243,7 @@ public class BLEManageFragment extends Fragment implements BleManager.BleManager
         if (mComponentToStartWhenConnected != null) {
             Log.d(TAG, "Start component:" + mComponentToStartWhenConnected);
             Intent intent = new Intent(getActivity(), mComponentToStartWhenConnected);
-            if (mSelectedDeviceData != null) {
+            if (mComponentToStartWhenConnected == BeaconActivity.class && mSelectedDeviceData != null) {
                 intent.putExtra("rssi", mSelectedDeviceData.rssi);
             }
             startActivityForResult(intent, kActivityRequestCode_ConnectedActivity);
@@ -1253,16 +1253,18 @@ public class BLEManageFragment extends Fragment implements BleManager.BleManager
     // region BleManagerListener
     @Override
     public void onConnected() {
+        Log.d(TAG, "BLEManageFragnent Connected");
     }
 
     @Override
     public void onConnecting() {
+        Log.d(TAG, "BLEManageFragnent Connecting ...");
     }
 
     @Override
     public void onDisconnected() {
-        Log.d(TAG, "MainActivity onDisconnected");
-        //getActivity().showConnectionStatus(false);
+        Log.d(TAG, "BLEManageFragnent onDisconnected");
+        showConnectionStatus(false);
     }
 
     @Override
@@ -1277,7 +1279,7 @@ public class BLEManageFragment extends Fragment implements BleManager.BleManager
                 public void run() {
                     Log.d(TAG, "Failed installation detected");
                     // Ask user if should update
-                   /* new AlertDialog.Builder(getActivity())
+                    new AlertDialog.Builder(getActivity())
                             .setTitle(R.string.scan_failedupdatedetected_title)
                             .setMessage(R.string.scan_failedupdatedetected_message)
                             .setPositiveButton(R.string.scan_failedupdatedetected_ok, new DialogInterface.OnClickListener() {
@@ -1286,38 +1288,39 @@ public class BLEManageFragment extends Fragment implements BleManager.BleManager
                                     showConnectionStatus(false);        // hide current dialogs because software update will display a dialog
                                     stopScanning();
 
-                                    mFirmwareUpdater.startFailedInstallationRecovery(MainActivity.this);
+                                    //mFirmwareUpdater.startFailedInstallationRecovery(MainActivity.this);
                                 }
                             })
                             .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    FirmwareUpdater.clearFailedInstallationRecoveryParams(MainActivity.this);
+                                    //FirmwareUpdater.clearFailedInstallationRecoveryParams(MainActivity.this);
                                     launchComponentActivity();
                                 }
                             })
                             .setCancelable(false)
-                            .show();*/
+                            .show();
                 }
             });
         } else {
                     // Check if a firmware update is available
-                    boolean isCheckingFirmware = false;
-                    if (false) {//mFirmwareUpdater != null
+                    boolean isCheckingFirmware = true; //this is fucked up now
+                    if (isCheckingFirmware) {//mFirmwareUpdater != null
                         // Don't bother the user waiting for checks if the latest connected device was this one too
                         String deviceAddress = mBleManager.getConnectedDeviceAddress();
                         if (!deviceAddress.equals(mLatestCheckedDeviceAddress)) {
                             mLatestCheckedDeviceAddress = deviceAddress;
 
-                   /* // Check if should update device software
-                    runOnUiThread(new Runnable() {
+                    // Check if should update device software
+                    getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             showGettingUpdateInfoState();
                         }
-                    });
+                    });/*
                     mFirmwareUpdater.checkFirmwareUpdatesForTheCurrentConnectedDevice();        // continues asynchronously in onFirmwareUpdatesChecked
                     isCheckingFirmware = true;*/
+                            launchComponentActivity();
                         } else {
                             Log.d(TAG, "Updates: Device already checked previously. Skipping...");
                         }
@@ -1940,7 +1943,7 @@ public class BLEManageFragment extends Fragment implements BleManager.BleManager
         private boolean mShouldEnableWifiOnQuit;
         private String mLatestCheckedDeviceAddress;
         private BluetoothDeviceData mSelectedDeviceData;
-        //private PeripheralList mPeripheralList;
+        private PeripheralList mPeripheralList;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -1958,10 +1961,11 @@ public class BLEManageFragment extends Fragment implements BleManager.BleManager
         if (mRetainedDataFragment == null) {
             // Create
             mRetainedDataFragment = new DataFragment();
-            fm.beginTransaction().add(mRetainedDataFragment, TAG).commitAllowingStateLoss();        // http://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-h
+            fm.beginTransaction().add(mRetainedDataFragment, TAG).commitAllowingStateLoss();
+            // http://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-h
 
             mScannedDevices =  new ArrayList<BluetoothDeviceData>();
-            // mPeripheralList = new PeripheralList();
+            mPeripheralList = new PeripheralList();
 
         } else {
             // Restore status
@@ -1970,7 +1974,7 @@ public class BLEManageFragment extends Fragment implements BleManager.BleManager
             mShouldEnableWifiOnQuit = mRetainedDataFragment.mShouldEnableWifiOnQuit;
             mLatestCheckedDeviceAddress = mRetainedDataFragment.mLatestCheckedDeviceAddress;
             mSelectedDeviceData = mRetainedDataFragment.mSelectedDeviceData;
-            //mPeripheralList = mRetainedDataFragment.mPeripheralList;
+            mPeripheralList = mRetainedDataFragment.mPeripheralList;
 
         }
     }
@@ -1981,7 +1985,7 @@ public class BLEManageFragment extends Fragment implements BleManager.BleManager
         mRetainedDataFragment.mShouldEnableWifiOnQuit = mShouldEnableWifiOnQuit;
         mRetainedDataFragment.mLatestCheckedDeviceAddress = mLatestCheckedDeviceAddress;
         mRetainedDataFragment.mSelectedDeviceData = mSelectedDeviceData;
-        //mRetainedDataFragment.mPeripheralList = mPeripheralList;
+        mRetainedDataFragment.mPeripheralList = mPeripheralList;
     }
 
 }

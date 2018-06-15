@@ -89,7 +89,7 @@ public class BleManager implements BleGattExecutor.BleExecutorListener {
 
         // Get preferences
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        final boolean reuseExistingConnection = sharedPreferences.getBoolean("pref_recycleconnection", false);
+        final boolean reuseExistingConnection = false;//sharedPreferences.getBoolean("pref_recycleconnection", false);
 
         if (reuseExistingConnection) {
             // Previously connected device.  Try to reconnect.
@@ -105,7 +105,7 @@ public class BleManager implements BleGattExecutor.BleExecutorListener {
                 }
             }
         } else {
-            final boolean forceCloseBeforeNewConnection = sharedPreferences.getBoolean("pref_forcecloseconnection", true);
+            final boolean forceCloseBeforeNewConnection = true;//sharedPreferences.getBoolean("pref_forcecloseconnection", true);
 
             if (forceCloseBeforeNewConnection) {
                 close();
