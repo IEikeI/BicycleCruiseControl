@@ -53,7 +53,7 @@
                 android:value=".InfoActivity" />
         </activity>
         <activity
-            android:name=".BluetoothConnection.UartActivity"
+            android:name=".bluetoothconnection.UartActivity"
             android:label="@string/title_activity_uart"
             android:screenOrientation="fullUser"
             android:windowSoftInputMode="adjustResize">
