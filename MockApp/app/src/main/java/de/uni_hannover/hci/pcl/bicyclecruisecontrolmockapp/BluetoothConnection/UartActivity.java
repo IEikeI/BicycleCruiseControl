@@ -28,9 +28,11 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
@@ -41,6 +43,7 @@ import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.CommonHelpActivity;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.R;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.blemanagement.BleManager;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.blemanagement.BleUtils;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.models.BLEProtocolTags;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.models.BicycleDriver;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.models.BicycleDriverGroup;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.mqtt.MqttManager;
@@ -51,7 +54,7 @@ import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.settings.PreferencesF
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-public class UartActivity extends UartInterfaceActivity implements MqttManager.MqttManagerListener {
+public class UartActivity extends UartInterfaceActivity implements MqttManager.MqttManagerListener,BLEProtocolTags {
     // Log
     private final static String TAG = UartActivity.class.getSimpleName();
 
@@ -59,6 +62,13 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
     private final static boolean kUseColorsForData = true;
     public final static int kDefaultMaxPacketsToPaintAsText = 500;
     private final static int kInfoColor = Color.parseColor("#F21625");
+
+    //Simulation Loop Stuff
+    private Button startSimButton;
+    private Button stopSimButton;
+    private boolean simFlag;
+    private long sleepTime;
+    private Thread simThread;
 
     // Activity request codes (used for onActivityResult)
     private static final int kActivityRequestCode_ConnectedSettingsActivity = 0;
@@ -125,13 +135,21 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uart);
 
+        if(bDGReadyForSend != null){
+            enableSimLoop();
+        }
+
         mBleManager = BleManager.getInstance(this);
         restoreRetainedDataFragment();
 
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
 
-        bDGReadyForSend = (BicycleDriverGroup) bundle.getSerializable("bDG");
+        if(bundle != null){ // || bundle.getSerializable("bDG") != null){
+            bDGReadyForSend = (BicycleDriverGroup) bundle.getSerializable("bDG");
+        } else {
+            Toast.makeText(this, "No BicycleDrivers initiated!", Toast.LENGTH_SHORT).show();
+        }
 
         // Get default theme colors
         TypedValue typedValue = new TypedValue();
@@ -199,6 +217,57 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
         if (MqttSettings.getInstance(this).isConnected()) {
             mMqttManager.connectFromSavedSettings(this);
         }
+
+        EditText editTextSleepTime = (EditText) findViewById(R.id.sleepEditText);
+        try{
+            sleepTime = Long.valueOf(editTextSleepTime.getText().toString());
+        } catch (NumberFormatException e){
+            Log.e(TAG, ""+e);
+        }
+
+        startSimButton = (Button) findViewById(R.id.buttonSimulationLoop);
+        startSimButton.setEnabled(false);
+        if(bDGReadyForSend != null){
+            enableSimLoop();
+        }
+        startSimButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    startSim();
+            }
+        });
+
+        stopSimButton = (Button) findViewById(R.id.buttonSimulationLoopStop);
+        stopSimButton.setEnabled(false);
+        stopSimButton.setVisibility(View.GONE);
+        stopSimButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopSim();
+            }
+        });
+    }
+
+    private void startSim(){
+        simFlag = true;
+        if(simThread != null ) {
+            simThread.start();
+        }
+        stopSimButton.setVisibility(View.VISIBLE);
+        stopSimButton.setEnabled(true);
+        startSimButton.setVisibility(View.GONE);
+        Toast.makeText(this, "Starting Simulation.", Toast.LENGTH_SHORT).show();
+    }
+
+    private void stopSim(){
+        simFlag = false;
+        if(simThread != null ) {
+            simThread.interrupt();
+        }
+        startSimButton.setVisibility(View.VISIBLE);
+        startSimButton.setEnabled(true);
+        stopSimButton.setVisibility(View.GONE);
+        Toast.makeText(this, "Stopping Simulation.\n This may takes a few seconds.", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -240,6 +309,12 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
         editor.apply();
     }
 
+    public void enableSimLoop(){
+        simFlag = true;
+        onClickSendExtended(null);
+        startSimButton.setEnabled(true);
+    }
+
     @Override
     public void onDestroy() {
         // Disconnect mqtt
@@ -268,39 +343,46 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
     }
 
     public void onClickSendExtended(View view) {
-        BicycleDriver bD;
-        for(int i = 0; i < bDGReadyForSend.getBicycleDrivers().size(); i++){
-            try {
-                bD = bDGReadyForSend.getBicycleDrivers().get(i);
-                uartSendData(""+bD.getGroupId(), false);
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            try {
-                bD = bDGReadyForSend.getBicycleDrivers().get(i);
-                uartSendData(""+bD.getDriverId(), false);
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            try {
-                bD = bDGReadyForSend.getBicycleDrivers().get(i);
-                uartSendData(""+bD.getSpeed(), false);
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            try {
-                bD = bDGReadyForSend.getBicycleDrivers().get(i);
-                uartSendData(""+bD.getHeartRate(), false);
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        if(bDGReadyForSend != null){
+            simThread = new Thread() {
+                @Override
+                public void run() {
+                    BicycleDriver bD;
+                    while (simFlag){
+                        for(int i = 0; i < bDGReadyForSend.getBicycleDrivers().size(); i++){
+                            try {
+                                bD = bDGReadyForSend.getBicycleDrivers().get(i);
+                                uartSendData(SEND_GROUP_ID+bD.getGroupId(), false);
+                                Thread.sleep(sleepTime);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                bD = bDGReadyForSend.getBicycleDrivers().get(i);
+                                uartSendData(SEND_DRIVER_ID+bD.getDriverId(), false);
+                                Thread.sleep(sleepTime);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                bD = bDGReadyForSend.getBicycleDrivers().get(i);
+                                uartSendData(SEND_SPEED+bD.getSpeed(), false);
+                                Thread.sleep(sleepTime);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                bD = bDGReadyForSend.getBicycleDrivers().get(i);
+                                uartSendData(SEND_HEARTRATE+bD.getHeartRate(), false);
+                                Thread.sleep(sleepTime);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            };
         }
-
-
     }
 
     private void uartSendData(String data, boolean wasReceivedFromMqtt) {
@@ -721,8 +803,9 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
     }
 
     private void updateUI() {
-        mSentBytesTextView.setText(String.format(getString(R.string.uart_sentbytes_format), mSentBytes));
-        mReceivedBytesTextView.setText(String.format(getString(R.string.uart_receivedbytes_format), mReceivedBytes));
+        //TODO do we need to fix this?
+        //mSentBytesTextView.setText(String.format(getString(R.string.uart_sentbytes_format), mSentBytes));
+        //mReceivedBytesTextView.setText(String.format(getString(R.string.uart_receivedbytes_format), mReceivedBytes));
     }
 
     private int mDataBufferLastSize = 0;
