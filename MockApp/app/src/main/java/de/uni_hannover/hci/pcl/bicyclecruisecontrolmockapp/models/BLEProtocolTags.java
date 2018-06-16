@@ -18,7 +18,7 @@ public interface BLEProtocolTags {
     public static final String SEND_DRIVER_ID = "#send_id$";
     public static final String SEND_NAME = "#send_name$";
     public static final String SEND_SPEED = "#send_speed$";
-    public static final String SEND_HEARTRATE = "#semd_hrt$";
+    public static final String SEND_HEARTRATE = "#send_hrt$";
     public static final String SEND_HEARTRATE_WARN = "#send_hrtwrn$";
 
     //RETRIEVING-DATA
