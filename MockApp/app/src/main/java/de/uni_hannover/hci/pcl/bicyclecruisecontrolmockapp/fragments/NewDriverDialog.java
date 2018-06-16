@@ -1,10 +1,9 @@
 package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.fragments;
 
 import android.app.DialogFragment;
-import android.app.IntentService;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,31 +11,64 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.google.gson.Gson;
+//import com.google.gson.Gson;
+
+import java.util.ArrayList;
 
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.MainActivity;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.R;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.models.BicycleDriver;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.models.BicycleDriverGroup;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.utils.BicycleDriverListAdapter;
 
 public class NewDriverDialog extends DialogFragment {
 
     private BicycleDriverGroup bicycleDriverGroup;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView mRecyclerView;
 
-    /*
-    public static NewDriverDialog newInstance(BicycleDriverGroup bicycleDriverGroup, MainActivity mainActivity) {
+    public NewDriverDialog(){
+        // Required empty public constructor
+    }
+
+    public static NewDriverDialog newInstance(BicycleDriverGroup bicycleDriverGroup, RecyclerView.Adapter mAdapter,
+                                              RecyclerView mRecyclerVie) {
         NewDriverDialog nDD = new NewDriverDialog();
 
-        Intent activity = new Intent(mainActivity, NewDriverDialog.class);
+        Bundle args = new Bundle();
+        nDD.setArguments(args);
+        nDD.setComplexVariable(bicycleDriverGroup, mAdapter, mRecyclerVie);
+
+        //First Try - ood
+        /*Intent activity = new Intent(mainActivity, NewDriverDialog.class);
         activity.putExtra("bicycleDriverGroup", new Gson().toJson(bicycleDriverGroup));
         startActivity(activity);
 
+        Intent intent = new Intent(mainActivity, NewDriverDialog.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("bDG", bicycleDriverGroup);
+        intent.putExtras(bundle);*/
+
         return nDD;
-    }*/
+    }
+
+    /**
+     * Helper for setting complex Objects to this DialogFragment
+     * @param bicycleDriverGroup
+     * @param mAdapter
+     * @param mRecyclerVie
+     */
+    public void setComplexVariable(BicycleDriverGroup bicycleDriverGroup, RecyclerView.Adapter mAdapter, RecyclerView mRecyclerVie) {
+        this.bicycleDriverGroup = bicycleDriverGroup;
+        this.mAdapter = mAdapter;
+        this.mRecyclerView = mRecyclerVie;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+
         /*String jsonMyObject = "bicycleDriverGroup";
         Bundle extras = getActivity().getIntent().getExtras();
         if (extras != null) {
@@ -56,7 +88,7 @@ public class NewDriverDialog extends DialogFragment {
         EditText editTextSpeed = (EditText) newDriverView.findViewById(R.id.editTextViewSpeed);
         EditText editTextHeartRate = (EditText) newDriverView.findViewById(R.id.editTextViewIdHeartRate);
 
-        final int id = 1; // bicycleDriverGroup.getBicycleDrivers().size() + 1;
+        final int id = bicycleDriverGroup.getBicycleDrivers().size() + 1;
         final int groupId = Integer.valueOf(editTextId.getText().toString());
         final String name = editTextName.getText().toString();
         final long speed = Long.valueOf(editTextSpeed.getText().toString());
@@ -74,7 +106,7 @@ public class NewDriverDialog extends DialogFragment {
     }
 
     /**
-     * Add just one new driver an close the dialog
+     * Add just one new driver an close the dialog and updates the UI
      * @param groupId
      * @param name
      * @param id
@@ -83,8 +115,19 @@ public class NewDriverDialog extends DialogFragment {
      */
     private void onSubtmit(int groupId, String name, int id, long speed, long heartrate) {
         BicycleDriver bicycleDriver = new BicycleDriver(groupId, name, id,  speed, heartrate);
-        //TODO add the current group to this dialog
-        //bicycleDriverGroup.addToDriverGroup(bicycleDriver);
+        bicycleDriverGroup.addToDriverGroup(bicycleDriver);
+
+        //since ArrayList has no listener, force refresh stuff
+        ArrayList<BicycleDriver> dataset;
+
+        if(bicycleDriverGroup != null && bicycleDriverGroup.getBicycleDrivers().size() < 1){
+            dataset = new ArrayList<BicycleDriver>();
+        } else {
+            dataset = bicycleDriverGroup.getBicycleDrivers();
+        }
+
+        mAdapter = new BicycleDriverListAdapter(dataset, (MainActivity) getActivity());
+        mRecyclerView.setAdapter(mAdapter);
         dismiss();
     }
 

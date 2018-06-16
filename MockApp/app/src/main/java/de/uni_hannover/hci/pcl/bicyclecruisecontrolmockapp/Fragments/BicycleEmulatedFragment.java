@@ -1,6 +1,7 @@
 package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -115,7 +116,15 @@ public class BicycleEmulatedFragment extends Fragment {
         addDriverButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new NewDriverDialog().show(getActivity().getFragmentManager(),"newDriverDialog");
+               //NewDriverDialog nDD = NewDriverDialog.newInstance(bicycleDriverGroup, (MainActivity) getActivity());
+                 //      nDD.show(getActivity().getFragmentManager(),"newDriverDialog");
+                //Intent intent = new Intent(getActivity(), NewDriverDialog.class);
+                //Bundle bundle = new Bundle();
+                //bundle.putSerializable("bDG", bicycleDriverGroup);
+                //intent.putExtras(bundle);
+
+                NewDriverDialog nDD = NewDriverDialog.newInstance(bicycleDriverGroup, mAdapter, mRecyclerView);
+                nDD.show(getActivity().getFragmentManager(),"newDriverDialog");
             }
         });
 

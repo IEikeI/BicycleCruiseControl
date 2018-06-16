@@ -1,11 +1,12 @@
 package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Model that holds a drivers corresponding group with all its members
  */
-public class BicycleDriverGroup {
+public class BicycleDriverGroup implements Serializable {
 
     private int groupId;
     private ArrayList<BicycleDriver> bicycleDrivers;

@@ -1,9 +1,11 @@
 package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.models;
 
+import java.io.Serializable;
+
 /**
  * Model that holds the current status of the bicycle driver (simulated).
  */
-public class BicycleDriver {
+public class BicycleDriver implements Serializable{
 
     /**
      * A fixed threshold for a heart rate warning
