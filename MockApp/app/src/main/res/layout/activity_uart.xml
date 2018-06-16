@@ -38,7 +38,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onClickSend"
+                android:onClick="onClickSendExtended"
                 android:text="@string/uart_send" />
         </LinearLayout>
 

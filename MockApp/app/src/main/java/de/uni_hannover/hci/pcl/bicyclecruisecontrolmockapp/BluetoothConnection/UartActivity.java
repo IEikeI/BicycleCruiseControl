@@ -41,6 +41,8 @@ import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.CommonHelpActivity;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.R;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.blemanagement.BleManager;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.blemanagement.BleUtils;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.models.BicycleDriver;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.models.BicycleDriverGroup;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.mqtt.MqttManager;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.mqtt.MqttSettings;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.settings.ConnectedSettingsActivity;
@@ -116,6 +118,8 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
 
     private int maxPacketsToPaintAsText;
 
+    private BicycleDriverGroup bDGReadyForSend;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,6 +127,11 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
 
         mBleManager = BleManager.getInstance(this);
         restoreRetainedDataFragment();
+
+        Intent intent = this.getIntent();
+        Bundle bundle = intent.getExtras();
+
+        bDGReadyForSend = (BicycleDriverGroup) bundle.getSerializable("bDG");
 
         // Get default theme colors
         TypedValue typedValue = new TypedValue();
@@ -149,6 +158,7 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
                     onClickSend(null);
+                    //onClickSendExtended(null);
                     return true;
                 }
 
@@ -255,6 +265,42 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
         mSendEditText.setText("");       // Clear editText
 
         uartSendData(data, false);
+    }
+
+    public void onClickSendExtended(View view) {
+        BicycleDriver bD;
+        for(int i = 0; i < bDGReadyForSend.getBicycleDrivers().size(); i++){
+            try {
+                bD = bDGReadyForSend.getBicycleDrivers().get(i);
+                uartSendData(""+bD.getGroupId(), false);
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                bD = bDGReadyForSend.getBicycleDrivers().get(i);
+                uartSendData(""+bD.getDriverId(), false);
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                bD = bDGReadyForSend.getBicycleDrivers().get(i);
+                uartSendData(""+bD.getSpeed(), false);
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                bD = bDGReadyForSend.getBicycleDrivers().get(i);
+                uartSendData(""+bD.getHeartRate(), false);
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+
     }
 
     private void uartSendData(String data, boolean wasReceivedFromMqtt) {

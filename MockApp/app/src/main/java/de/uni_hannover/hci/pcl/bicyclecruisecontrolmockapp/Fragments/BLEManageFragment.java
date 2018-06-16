@@ -93,6 +93,7 @@ import java.util.UUID;
 
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.blemanagement.BleManager;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.blemanagement.BleUtils;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.models.BicycleDriverGroup;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.ui.utils.DialogUtils;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.ui.utils.ExpandableHeightExpandableListView;
 
@@ -172,6 +173,7 @@ public class BLEManageFragment extends Fragment implements BleManager.BleManager
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
+    private BicycleDriverGroup bicycleDriverGroup;
     private String mParam1;
     private String mParam2;
 
@@ -180,6 +182,14 @@ public class BLEManageFragment extends Fragment implements BleManager.BleManager
     private EditText mOutEditText;
     private Button mSendButton;
     private TextView mtextHeader;
+
+    public BicycleDriverGroup getBicycleDriverGroup() {
+        return bicycleDriverGroup;
+    }
+
+    public void setBicycleDriverGroup(BicycleDriverGroup bicycleDriverGroup) {
+        this.bicycleDriverGroup = bicycleDriverGroup;
+    }
 
     /**
      * Name of the connected device
@@ -1242,6 +1252,11 @@ public class BLEManageFragment extends Fragment implements BleManager.BleManager
         if (mComponentToStartWhenConnected != null) {
             Log.d(TAG, "Start component:" + mComponentToStartWhenConnected);
             Intent intent = new Intent(getActivity(), mComponentToStartWhenConnected);
+            Bundle bundle = new Bundle();
+            if(bicycleDriverGroup != null){
+                bundle.putSerializable("bDG", bicycleDriverGroup);
+                intent.putExtras(bundle);
+            }
             if (mComponentToStartWhenConnected == BeaconActivity.class && mSelectedDeviceData != null) {
                 intent.putExtra("rssi", mSelectedDeviceData.rssi);
             }

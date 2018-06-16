@@ -481,6 +481,7 @@
     <string name="ok">Ok</string>
     <string name="_1">1</string>
     <string name="_00l">10</string>
+    <string name="daten_simulieren_und_senden">Daten simulieren und senden</string>
 
     <!-- Debug -->
 </resources>

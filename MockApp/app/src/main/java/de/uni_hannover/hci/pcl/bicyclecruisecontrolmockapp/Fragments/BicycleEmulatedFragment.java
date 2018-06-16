@@ -3,9 +3,13 @@ package de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +19,7 @@ import java.util.ArrayList;
 
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.MainActivity;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.R;
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.bluetoothconnection.UartActivity;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.models.BicycleDriver;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.models.BicycleDriverGroup;
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.utils.BicycleDriverListAdapter;
@@ -29,6 +34,8 @@ import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.utils.BicycleDriverLi
  * create an instance of this fragment.
  */
 public class BicycleEmulatedFragment extends Fragment {
+    private static final String TAG = "BicycleEmulatedFragment";
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -125,6 +132,19 @@ public class BicycleEmulatedFragment extends Fragment {
 
                 NewDriverDialog nDD = NewDriverDialog.newInstance(bicycleDriverGroup, mAdapter, mRecyclerView);
                 nDD.show(getActivity().getFragmentManager(),"newDriverDialog");
+            }
+        });
+
+        Button startSimButton = (Button) emulatedView.findViewById(R.id.startSendingDriverData);
+        startSimButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ViewPager vp =(ViewPager) getActivity().findViewById(R.id.container);
+                BLEManageFragment bleFragment = (BLEManageFragment) getActivity().getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.container + ":" + 0);
+                bleFragment.setBicycleDriverGroup(bicycleDriverGroup);
+                Log.d(TAG, "Fragment should switch");
+                //((MainActivity) getActivity()).getActionBar().setSelectedNavigationItem(0); //deprecated
+                vp.setCurrentItem(0);
             }
         });
 

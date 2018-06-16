@@ -20,6 +20,7 @@ import android.view.ViewGroup
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.fragments.BLEManageFragment
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.fragments.BicycleEmulatedFragment
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.fragments.SensorInputFragment
+import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.models.BicycleDriverGroup
 import de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.settings.SettingsActivity
 
 class MainActivity : AppCompatActivity(), BLEManageFragment.OnBLEManageFragmentInteractionListener, SensorInputFragment.OnSensorInputFragmentInteractionListener, BicycleEmulatedFragment.OnBicycleEmulatedFragmentInteractionListener {
