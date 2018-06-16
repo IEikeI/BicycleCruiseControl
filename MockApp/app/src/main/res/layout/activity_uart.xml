@@ -23,7 +23,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#cccccc"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
 
             <EditText
                 android:id="@+id/sendEditText"
@@ -38,9 +39,10 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onClickSendExtended"
+                android:onClick="onClickSend"
                 android:text="@string/uart_send" />
         </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -66,6 +68,65 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="4dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="0dp"
+                    android:scrollbarAlwaysDrawVerticalTrack="true"
+                    android:scrollbars="vertical"
+                    android:singleLine="false"
+                    android:textSize="16sp"
+                    android:text="@string/st_ms"
+                    android:textColor="@color/colorAccent" />
+
+                <EditText
+                    android:id="@+id/sleepEditText"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="20dp"
+                    android:inputType="numberDecimal"
+                    android:scrollbarAlwaysDrawVerticalTrack="true"
+                    android:scrollbars="vertical"
+                    android:singleLine="false"
+                    android:textSize="16sp"
+                    android:text="@string/_1000"/>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/buttonSimulationLoop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:text="@string/start_simulation_loop" />
+
+            <Button
+                android:id="@+id/buttonSimulationLoopStop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:text="@string/stop_simulation_loop" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -99,7 +160,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <Button
                 style="?android:attr/borderlessButtonStyle"
