@@ -53,15 +53,12 @@ const uint32_t partial_update_period_s = 2;
 const uint32_t full_update_period_s = 1 * 60 * 60;
 #endif
 
-uint32_t start_time;
-uint32_t next_time;
-uint32_t previous_time;
-uint32_t previous_full_update;
-
-uint32_t total_seconds = 0;
-uint32_t seconds, minutes, hours, days;
-
 #include "BitmapGraphics.h"
+
+#include <RCSwitch.h>
+
+RCSwitch mySwitch = RCSwitch();
+
 
 void setup(void)
 {
@@ -83,53 +80,47 @@ void setup(void)
   // partial update to full screen to preset for partial update of box window
   // (this avoids strange background effects)
   display.drawExampleBitmap(BitmapExample1, sizeof(BitmapExample1), GxEPD::bm_default | GxEPD::bm_partial_update);
-  start_time = next_time = previous_time = previous_full_update = millis();
   display.setRotation(1);
+  
+  mySwitch.enableReceive(0);  // Receiver on inerrupt 0 => that is pin #2
+
+  showPartialUpdate_AVR();
+      showPartialUpdate_AVR2();
+      showPartialUpdate_AVR3();
+
+  
+
 }
 
 void loop()
 {
-  uint32_t actual = millis();
-  while (actual < next_time)
-  {
-    // the "BlinkWithoutDelay" method works also for overflowed millis
-    if ((actual - previous_time) > (partial_update_period_s * 1000))
-    {
-      //Serial.print(actual - previous_time); Serial.print(" > "); Serial.println(partial_update_period_s * 1000);
-      break;
+  
+  //showPartialUpdate_AVRDebug();
+  
+  if (mySwitch.available()) {
+    
+    int value = mySwitch.getReceivedValue();
+    
+    if (value == 0) {
+      Serial.print("Unknown encoding");
+    } else {
+      Serial.print("Received ");
+      Serial.print( mySwitch.getReceivedValue() );
+      Serial.print(" / ");
+      Serial.print( mySwitch.getReceivedBitlength() );
+      Serial.print("bit ");
+      Serial.print("Protocol: ");
+      Serial.println( mySwitch.getReceivedProtocol() );
+      Serial.println ( (long) mySwitch.getReceivedRawdata() );
+
+      showPartialUpdate_AVRDebug();
+
     }
-    delay(100);
-    actual = millis();
+    mySwitch.resetAvailable();
   }
-  //Serial.print("actual: "); Serial.print(actual); Serial.print(" previous: "); Serial.println(previous_time);
-  if ((actual - previous_full_update) > full_update_period_s * 1000)
-  {
-
-    display.drawExampleBitmap(BitmapExample1, sizeof(BitmapExample1));
-    display.drawExampleBitmap(BitmapExample1, sizeof(BitmapExample1), GxEPD::bm_default | GxEPD::bm_partial_update);
-
-    previous_full_update = actual;
-  }
-  previous_time = actual;
-  next_time += uint32_t(partial_update_period_s * 1000);
-  total_seconds += partial_update_period_s;
-  seconds = total_seconds % 60;
-  minutes = (total_seconds / 60) % 60;
-  hours = (total_seconds / 3600) % 24;
-  days = (total_seconds / 3600) / 24;
-
-  showPartialUpdate_AVR();
-  showPartialUpdate_AVR2();
-  showPartialUpdate_AVR3();
-  showPartialUpdate_AVRDebug();
 
 }
 
-void print02d(uint32_t d)
-{
-  if (d < 10) display.print("0");
-  display.print(d);
-}
 
 void drawCallback()
 {
@@ -140,10 +131,8 @@ void drawCallback()
   uint16_t cursor_y = box_y + 16;
   display.fillRect(box_x, box_y, box_w, box_h, GxEPD_WHITE);
   display.setCursor(box_x, cursor_y);
-  //display.print("7"); display.print("d "); print02d(hours); display.print(":"); print02d(minutes); display.print(":"); print02d(seconds);
   display.print("Slowest: ");
-  print02d(seconds);
-  display.print(" km/h");
+  display.print("15 km/h");
 }
 
 void drawCallback2()
@@ -151,7 +140,7 @@ void drawCallback2()
   uint16_t box_x = 80;
   uint16_t box_y = 110;
   uint16_t box_w = 110;
-  uint16_t box_h = 75;
+  uint16_t box_h = 70;
   uint16_t cursor_y = box_y + 16;
   display.fillRect(box_x, box_y, box_w, box_h, GxEPD_WHITE);
   display.setCursor(box_x, cursor_y);
@@ -186,7 +175,7 @@ void drawCallbackDebug()
   uint16_t cursor_y = box_y + 16;
   display.fillRect(box_x, box_y, box_w, box_h, GxEPD_WHITE);
   display.setCursor(box_x, cursor_y);
-  display.print("Rec: 45L");
+  display.print(mySwitch.getReceivedValue());
 }
 
 void showPartialUpdate_AVR()
@@ -204,7 +193,7 @@ void showPartialUpdate_AVR2()
   uint16_t box_x = 80;
   uint16_t box_y = 110;
   uint16_t box_w = 110;
-  uint16_t box_h = 75;
+  uint16_t box_h = 70;
   uint16_t cursor_y = box_y + 14;
   display.drawPagedToWindow(drawCallback2, box_x, box_y, box_w, box_h);
 }
