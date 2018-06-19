@@ -29,4 +29,6 @@ public interface BLEProtocolTags {
     public static final String RET_HEARTRATE = "#ret_hrt$";
     public static final String RET_HEARTRATE_WARN = "#ret_hrtwrn$";
 
+    //Escaper (marks the end of an package
+    public static final String ESCAPER = "!";
 }

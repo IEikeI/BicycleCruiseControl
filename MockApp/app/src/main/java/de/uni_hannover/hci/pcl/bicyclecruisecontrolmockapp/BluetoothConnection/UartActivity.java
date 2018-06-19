@@ -352,28 +352,28 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
                         for(int i = 0; i < bDGReadyForSend.getBicycleDrivers().size(); i++){
                             try {
                                 bD = bDGReadyForSend.getBicycleDrivers().get(i);
-                                uartSendData(SEND_GROUP_ID+bD.getGroupId(), false);
+                                uartSendData(SEND_GROUP_ID+bD.getGroupId()+ESCAPER, false);
                                 Thread.sleep(sleepTime);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
                             try {
                                 bD = bDGReadyForSend.getBicycleDrivers().get(i);
-                                uartSendData(SEND_DRIVER_ID+bD.getDriverId(), false);
+                                uartSendData(SEND_DRIVER_ID+bD.getDriverId()+ESCAPER, false);
                                 Thread.sleep(sleepTime);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
                             try {
                                 bD = bDGReadyForSend.getBicycleDrivers().get(i);
-                                uartSendData(SEND_SPEED+bD.getSpeed(), false);
+                                uartSendData(SEND_SPEED+bD.getSpeed()+ESCAPER, false);
                                 Thread.sleep(sleepTime);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
                             try {
                                 bD = bDGReadyForSend.getBicycleDrivers().get(i);
-                                uartSendData(SEND_HEARTRATE+bD.getHeartRate(), false);
+                                uartSendData(SEND_HEARTRATE+bD.getHeartRate()+ESCAPER, false);
                                 Thread.sleep(sleepTime);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
