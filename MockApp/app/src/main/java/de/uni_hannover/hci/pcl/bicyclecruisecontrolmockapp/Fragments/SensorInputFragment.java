@@ -71,7 +71,7 @@ public class SensorInputFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View sensorView = inflater.inflate(R.layout.fragment_sensor_input, container, false);
+        View sensorView = inflater.inflate(R.layout.fragment_settings_board, container, false);
 
         return sensorView;
     }

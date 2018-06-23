@@ -271,6 +271,15 @@ public class BLEManageFragment extends Fragment implements BleManager.BleManager
                              Bundle savedInstanceState) {
         View bleManagerView = inflater.inflate(R.layout.fragment_ble_manager, container, false);
 
+        Button buttonTest = (Button) bleManagerView.findViewById(R.id.buttonUARTTest);
+        buttonTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(getActivity(), UartActivity.class);
+                startActivity(myIntent);
+            }
+        });
+
         // Init variables
         mBleManager = BleManager.getInstance(getActivity());
         restoreRetainedDataFragment();

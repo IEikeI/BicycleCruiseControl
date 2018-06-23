@@ -95,6 +95,12 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
     private Handler mMqttMenuItemAnimationHandler;
     private TextView mSentBytesTextView;
     private TextView mReceivedBytesTextView;
+    private TextView tvDriverName;
+    private TextView tvDriverId;
+    private TextView tvGroupdID;
+    private TextView tvSpeed;
+    private TextView tvHeartRate;
+    private TextView tvDHeartRateWarn;
 
     // UI TextBuffer (refreshing the text buffer is managed with a timer because a lot of changes can arrive really fast and could stall the main thread)
     private Handler mUIRefreshTimerHandler = new Handler();
@@ -138,6 +144,13 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
         if(bDGReadyForSend != null){
             enableSimLoop();
         }
+
+        tvDriverName = (TextView) findViewById(R.id.tv_show_drivername);
+        tvDriverId = (TextView) findViewById(R.id.tv_show_driverid);
+        tvGroupdID = (TextView) findViewById(R.id.tv_show_groupid);
+        tvSpeed = (TextView) findViewById(R.id.tv_show_speed);
+        tvHeartRate = (TextView) findViewById(R.id.tv_show_heartRate);
+        tvDHeartRateWarn = (TextView) findViewById(R.id.tv_show_warning);
 
         mBleManager = BleManager.getInstance(this);
         restoreRetainedDataFragment();
@@ -350,7 +363,7 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
                     BicycleDriver bD;
                     while (simFlag){
                         for(int i = 0; i < bDGReadyForSend.getBicycleDrivers().size(); i++){
-                            try {
+                            /*try {
                                 bD = bDGReadyForSend.getBicycleDrivers().get(i);
                                 uartSendData(SEND_GROUP_ID+bD.getGroupId()+ESCAPER, false);
                                 Thread.sleep(sleepTime);
@@ -363,26 +376,50 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
                                 Thread.sleep(sleepTime);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
-                            }
+                            }*/
                             try {
                                 bD = bDGReadyForSend.getBicycleDrivers().get(i);
-                                uartSendData(SEND_SPEED+bD.getSpeed()+ESCAPER, false);
+                                //uartSendData(SEND_SPEED+bD.getSpeed()+ESCAPER, false);
+                                String curSpeed = formatSpeed(bD.getSpeed());
+                                if(curSpeed.matches("^[0-9]{11}$")){
+                                    uartSendData(curSpeed, false);
+                                } else {
+                                    Toast.makeText(UartActivity.this, "Wrong speed format!", Toast.LENGTH_SHORT).show();
+                                }
                                 Thread.sleep(sleepTime);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
-                            }
+                            }/*
                             try {
                                 bD = bDGReadyForSend.getBicycleDrivers().get(i);
                                 uartSendData(SEND_HEARTRATE+bD.getHeartRate()+ESCAPER, false);
                                 Thread.sleep(sleepTime);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
-                            }
+                            }*/
                         }
                     }
                 }
             };
         }
+    }
+
+    private String formatSpeed(long speed){
+        String formatedSpeed = "";
+        formatedSpeed = String.valueOf(speed);
+        if (formatedSpeed.contains(",")){
+            formatedSpeed = formatedSpeed.replace(',', Character.MIN_VALUE);
+        }
+        if (formatedSpeed.contains(".")){
+            formatedSpeed = formatedSpeed.replace('.', Character.MIN_VALUE);
+        }
+        if (formatedSpeed.contains("L")){
+            formatedSpeed = formatedSpeed.replace('L', Character.MIN_VALUE);
+        }
+        if(formatedSpeed.length() > 3){
+            formatedSpeed = formatedSpeed.substring(0, 3); // returns the first 3 numbers of the speed value
+        }
+        return formatedSpeed;
     }
 
     private void uartSendData(String data, boolean wasReceivedFromMqtt) {
@@ -749,6 +786,17 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
                 final UartDataChunk dataChunk = new UartDataChunk(System.currentTimeMillis(), UartDataChunk.TRANSFERMODE_RX, bytes);
                 mDataBuffer.add(dataChunk);
 
+                //TODO UI Text
+                String strSpeed = "";
+                try {
+                    strSpeed = new String(dataChunk.getData(), "UTF-8"); // for UTF-8 encoding
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                if (strSpeed.matches("^[0-9]{11}$")){
+                     tvSpeed.setText(strSpeed);
+                }
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -862,9 +910,8 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
             mBufferTextView.setText("");
         }
     }
-
-
-    // region DataFragment
+    
+// region DataFragment
     public static class DataFragment extends Fragment {
         private boolean mShowDataInHexFormat;
         private SpannableStringBuilder mTextSpanBuffer;

@@ -1,196 +1,394 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/ic_stat_notify_dfu"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.bluetoothconnection.UartActivity">
-    <!-- TODO: fix the default colors -->
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/sendLayout"
+        android:id="@+id/rootLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical">
+        android:background="@drawable/ic_stat_notify_dfu"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        tools:context="de.uni_hannover.hci.pcl.bicyclecruisecontrolmockapp.bluetoothconnection.UartActivity">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#cccccc"
-            android:orientation="horizontal"
-            android:layout_marginTop="4dp">
+            android:layout_height="300dp"
+            android:orientation="vertical">
+            <!--
+              android:layout_below="@id/headerLayout"
+              android:layout_marginTop="10dp"
+              !-->
+
+            <ListView
+                android:id="@+id/bufferListView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#cccccc" />
 
             <EditText
-                android:id="@+id/sendEditText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:id="@+id/bufferTextView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:inputType="textNoSuggestions|textVisiblePassword"
-                android:scrollbarAlwaysDrawVerticalTrack="true"
-                android:scrollbars="vertical"
-                android:singleLine="false" />
+                android:background="#cccccc"
+                android:cursorVisible="false"
+                android:gravity="top"
+                android:scrollbarFadeDuration="0"
+                android:textColorHighlight="#ffffff"
+                android:inputType="" />
 
-            <Button
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="onClickSend"
-                android:text="@string/uart_send" />
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <Button
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="onClickCopy"
+                    android:text="@string/uart_copy"
+                    android:textColor="@color/colorAccent" />
+
+                <Button
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="onClickShare"
+                    android:text="@string/uart_share"
+                    android:textColor="@color/colorAccent" />
+
+                <Button
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="onClickClear"
+                    android:text="@string/uart_clear"
+                    android:textColor="@color/colorAccent" />
+
+            </LinearLayout>
         </LinearLayout>
 
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/sentBytesTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/uart_sentbytes_format"
-                android:textColor="@color/colorAccent" />
-
-            <TextView
-                android:id="@+id/receivedBytesTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:text="@string/uart_receivedbytes_format"
-                android:textColor="@color/colorAccent" />
-
-        </LinearLayout>
-
-        <LinearLayout
+    <LinearLayout
+            android:id="@+id/sendLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="4dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="4dp"
+                android:background="#cccccc"
                 android:orientation="horizontal"
-                android:gravity="center">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:layout_marginStart="2dp"
-                    android:layout_marginEnd="0dp"
-                    android:scrollbarAlwaysDrawVerticalTrack="true"
-                    android:scrollbars="vertical"
-                    android:singleLine="false"
-                    android:textSize="16sp"
-                    android:text="@string/st_ms"
-                    android:textColor="@color/colorAccent" />
+                android:layout_marginTop="4dp">
 
                 <EditText
-                    android:id="@+id/sleepEditText"
-                    android:layout_width="80dp"
+                    android:id="@+id/sendEditText"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="20dp"
-                    android:inputType="numberDecimal"
+                    android:layout_weight="1"
+                    android:inputType="textNoSuggestions|textVisiblePassword"
                     android:scrollbarAlwaysDrawVerticalTrack="true"
                     android:scrollbars="vertical"
-                    android:singleLine="false"
-                    android:textSize="16sp"
-                    android:text="@string/_1000"/>
+                    android:singleLine="false" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="onClickSend"
+                    android:text="@string/uart_send" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/sentBytesTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/uart_sentbytes_format"
+                    android:textColor="@color/colorAccent" />
+
+                <TextView
+                    android:id="@+id/receivedBytesTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/uart_receivedbytes_format"
+                    android:textColor="@color/colorAccent" />
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/buttonSimulationLoop"
+            <LinearLayout
+                android:id="@+id/buttonsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:text="@string/start_simulation_loop" />
+                android:layout_gravity="end"
+                android:layout_marginTop="4dp"
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/buttonSimulationLoopStop"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:text="@string/stop_simulation_loop" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="start"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginEnd="0dp"
+                        android:scrollbarAlwaysDrawVerticalTrack="true"
+                        android:scrollbars="vertical"
+                        android:singleLine="false"
+                        android:textSize="16sp"
+                        android:text="@string/st_ms"
+                        android:textColor="@color/colorAccent" />
+
+                    <EditText
+                        android:id="@+id/sleepEditText"
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="20dp"
+                        android:inputType="numberDecimal"
+                        android:scrollbarAlwaysDrawVerticalTrack="true"
+                        android:scrollbars="vertical"
+                        android:singleLine="false"
+                        android:textSize="16sp"
+                        android:text="@string/_1000"/>
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/buttonSimulationLoop"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:text="@string/start_simulation_loop" />
+
+                <Button
+                    android:id="@+id/buttonSimulationLoopStop"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:text="@string/stop_simulation_loop" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/sendLayout"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical">
-        <!--
-          android:layout_below="@id/headerLayout"
-          android:layout_marginTop="10dp"
-          !-->
-        <ListView
-            android:id="@+id/bufferListView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#cccccc" />
-
-        <EditText
-            android:id="@+id/bufferTextView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#cccccc"
-            android:cursorVisible="false"
-            android:gravity="top"
-            android:scrollbarFadeDuration="0"
-            android:textColorHighlight="#ffffff" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_below="@+id/sendLayout">
 
-            <Button
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="0dp"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="onClickCopy"
-                android:text="@string/uart_copy"
-                android:textColor="@color/colorAccent" />
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="16dp"
+                android:layout_weight="0"
+                android:text="@string/daten_des_boards"
+                android:textAlignment="center"
+                android:textSize="24sp" />
 
-            <Button
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="onClickShare"
-                android:text="@string/uart_share"
-                android:textColor="@color/colorAccent" />
+                android:layout_weight="0"
+                android:orientation="horizontal">
 
-            <Button
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="0dp"
+                <TextView
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/name"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/tv_show_drivername"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="0dp"
+                    android:text="@string/text"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="onClickClear"
-                android:text="@string/uart_clear"
-                android:textColor="@color/colorAccent" />
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/id"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/tv_show_groupid"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/number"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/uuid"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/tv_show_driverid"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/number"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/speed"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/tv_show_speed"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="16dp"
+                    android:inputType="none"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:text="@string/_0_00"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/heart_rate"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/tv_show_heartRate"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="16dp"
+                    android:inputType="none"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:text="@string/_0_00"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/warning_triggered"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/tv_show_warning"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="16dp"
+                    android:inputType="none"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:text="@string/false_show"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
+            </LinearLayout>
 
         </LinearLayout>
-    </LinearLayout>
 
-</RelativeLayout>
+    </LinearLayout>
+</ScrollView>

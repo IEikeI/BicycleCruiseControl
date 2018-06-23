@@ -169,7 +169,7 @@ class MainActivity : AppCompatActivity(), BLEManageFragment.OnBLEManageFragmentI
             when (position) {
                 0 -> return "BLE Manager"
                 1 -> return "Bicycle Monitor"
-                2 -> return "TODO"
+                2 -> return "Settings"
             }
             return null
         }
