@@ -31,7 +31,7 @@
 
 // FreeFonts from Adafruit_GFX
 #include <Fonts/FreeMonoBold9pt7b.h>
-#include <Fonts/FreeMonoBold12pt7b.h>
+//#include <Fonts/FreeMonoBold12pt7b.h>
 
 //#include GxEPD_BitmapExamples
 
@@ -53,7 +53,7 @@ const uint32_t partial_update_period_s = 2;
 const uint32_t full_update_period_s = 1 * 60 * 60;
 #endif
 
-#include "BitmapGraphics.h"
+//#include "BitmapGraphics.h"
 
 #include <RCSwitch.h>
 
@@ -72,30 +72,26 @@ void setup(void)
   display.setRotation(0);
   // draw background
 
-
   // cope with code size limitation
-  display.drawExampleBitmap(BitmapExample1, sizeof(BitmapExample1));
+  //display.drawExampleBitmap(BitmapExample1, sizeof(BitmapExample1));
   display.setFont(&FreeMonoBold9pt7b);
 
   // partial update to full screen to preset for partial update of box window
   // (this avoids strange background effects)
-  display.drawExampleBitmap(BitmapExample1, sizeof(BitmapExample1), GxEPD::bm_default | GxEPD::bm_partial_update);
+  //display.drawExampleBitmap(BitmapExample1, sizeof(BitmapExample1), GxEPD::bm_default | GxEPD::bm_partial_update);
   display.setRotation(1);
   
   mySwitch.enableReceive(0);  // Receiver on inerrupt 0 => that is pin #2
 
   showPartialUpdate_AVR();
-      showPartialUpdate_AVR2();
-      showPartialUpdate_AVR3();
-
-  
-
+      //showPartialUpdate_AVR2();
+      //showPartialUpdate_AVR3();
 }
 
 void loop()
 {
   
-  //showPartialUpdate_AVRDebug();
+  //showPartialUpdate_AVR();
   
   if (mySwitch.available()) {
     
@@ -113,7 +109,7 @@ void loop()
       Serial.println( mySwitch.getReceivedProtocol() );
       Serial.println ( (long) mySwitch.getReceivedRawdata() );
 
-      showPartialUpdate_AVRDebug();
+      showPartialUpdate_AVR();
 
     }
     mySwitch.resetAvailable();
@@ -121,20 +117,70 @@ void loop()
 
 }
 
-
 void drawCallback()
 {
-  uint16_t box_x = 10;
+  uint16_t box_x = 0;
   uint16_t box_y = 0;
   uint16_t box_w = 190;
-  uint16_t box_h = 20;
+  uint16_t box_h = 180;
   uint16_t cursor_y = box_y + 16;
   display.fillRect(box_x, box_y, box_w, box_h, GxEPD_WHITE);
   display.setCursor(box_x, cursor_y);
-  display.print("Slowest: ");
-  display.print("15 km/h");
-}
 
+  display.println("Slowest:");
+  
+  double randomSpeed0 = ((double) random(110,280)) / 10;
+  display.print(String(randomSpeed0, 1));
+  display.println(" km/h");
+  
+  display.println("Speed: ");
+
+  double randomSpeed1 = ((double) random(110,280)) / 10;
+  display.print(String(randomSpeed1, 1));
+  display.println(" km/h");
+
+  display.println("Puls: ");
+
+  //double randomSpeed2 = ((double) random(800,1300)) / 10;
+  //display.print(String(randomSpeed2, 0));
+  //display.println(" hz");
+
+  //display.println("Puls: ");
+
+  //double randomPuls = (double) random(80,130);
+  //display.print(String(randomPuls, 1));
+  //display.println(" bpm");
+
+  /*
+  display.print("Slowest: \n");
+  
+  double randomSpeed = ((double) random(110,280)) / 10;
+  display.print(String(randomSpeed, 1));
+  display.print(" km/h");
+
+  cursor_y = cursor_y + 30;
+  display.setCursor(box_x, cursor_y);
+
+  display.print("Speed: \n");
+  
+  cursor_y = cursor_y + 22;
+  display.setCursor(box_x, cursor_y);
+  
+  display.print("24 km/h \n");
+  
+  cursor_y = cursor_y + 27;
+  display.setCursor(box_x, cursor_y);
+
+  display.print("Puls: \n");
+
+  cursor_y = cursor_y + 22;
+  display.setCursor(box_x, cursor_y);
+  
+  //display.print("120 bpm");
+  //display.setFont(&FreeMonoBold9pt7b);
+  */
+}
+/*
 void drawCallback2()
 {
   uint16_t box_x = 80;
@@ -147,13 +193,14 @@ void drawCallback2()
   display.print("Speed: \n");
   display.setCursor(box_x, cursor_y +22);
   display.setFont(&FreeMonoBold12pt7b);
+
   display.print("24 km/h \n");
   display.setFont(&FreeMonoBold9pt7b);
   display.setCursor(box_x, cursor_y +47);
   display.print("3 Members");
 
 }
-
+/*
 void drawCallback3()
 {
   uint16_t box_x = 80;
@@ -169,25 +216,39 @@ void drawCallback3()
 void drawCallbackDebug()
 {
   uint16_t box_x = 80;
-  uint16_t box_y = 180;
+  uint16_t box_y = 60;
   uint16_t box_w = 110;
-  uint16_t box_h = 15;
+  uint16_t box_h = 70;
   uint16_t cursor_y = box_y + 16;
   display.fillRect(box_x, box_y, box_w, box_h, GxEPD_WHITE);
   display.setCursor(box_x, cursor_y);
+
+  display.print("! Slower !\n");
+  cursor_y = cursor_y + 27;
+  display.setCursor(box_x, cursor_y);
+  
+  display.print("Speed: \n");
+  display.setCursor(box_x, cursor_y +22);
+  display.setFont(&FreeMonoBold12pt7b);
+
+  display.print("24 km/h \n");
+  display.setFont(&FreeMonoBold9pt7b);
+  //display.setCursor(box_x, cursor_y +47);
+  //display.print("3 Members");
+  
   display.print(mySwitch.getReceivedValue());
 }
-
+*/
 void showPartialUpdate_AVR()
 {
-  uint16_t box_x = 10;
+  uint16_t box_x = 0;
   uint16_t box_y = 0;
   uint16_t box_w = 190;
-  uint16_t box_h = 20;
+  uint16_t box_h = 180;
   uint16_t cursor_y = box_y + 14;
   display.drawPagedToWindow(drawCallback, box_x, box_y, box_w, box_h);
 }
-
+/*
 void showPartialUpdate_AVR2()
 {
   uint16_t box_x = 80;
@@ -211,14 +272,14 @@ void showPartialUpdate_AVR3()
 void showPartialUpdate_AVRDebug()
 {
   uint16_t box_x = 80;
-  uint16_t box_y = 180;
+  uint16_t box_y = 60;
   uint16_t box_w = 110;
-  uint16_t box_h = 15;
+  uint16_t box_h = 70;
   uint16_t cursor_y = box_y + 14;
   display.drawPagedToWindow(drawCallbackDebug, box_x, box_y, box_w, box_h);
 }
 
-
+*/
 
 
 
