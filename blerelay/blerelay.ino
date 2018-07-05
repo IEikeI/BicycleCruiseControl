@@ -100,6 +100,7 @@ void setup() {
   ble.setMode(BLUEFRUIT_MODE_DATA);
 
   Serial.println(F("******************************"));
+
 }
 
 void loop() {
@@ -124,21 +125,47 @@ void loop() {
 
     mySwitch.resetAvailable();
   }
-
+  
+  int l = 0;
+  int cnt = 0;
   while ( ble.available() )
   {
-    int c = ble.read();
-
+    char c = ble.read();
     Serial.print(c);
+    Serial.print(", ");
+    
+
+
 
     // Hex output too, helps w/debugging!
-    Serial.print(" [0x");
-    if (c <= 0xF) Serial.print(F("0"));
-    Serial.print(c, HEX);
-    Serial.print("] ");
+    //Serial.print(" [0x");
+    //if (c <= 0xF) Serial.print(F("0"));
+    //Serial.print(c, HEX);
+    //Serial.print("] ");
 
-    mySwitch.send(c, 24);
+    if (c == 10) {
+      Serial.println("");
+      Serial.println(l);
+      mySwitch.send(l, 32);
+    } else {
+      int i = c - '0';
+      if (cnt == 0) {
+        l = l + (i * 100);
+        cnt++;
+      } else if (cnt == 1) {
+        l = l + (i * 10);
+        cnt++;
+      } else if (cnt == 2) {
+        l = l + i;
+        cnt = 0;
+      }
+      
+    }
+  
+      
   }
+
+  
   
   
 }

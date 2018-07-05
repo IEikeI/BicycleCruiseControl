@@ -910,7 +910,7 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
             mBufferTextView.setText("");
         }
     }
-    
+
 // region DataFragment
     public static class DataFragment extends Fragment {
         private boolean mShowDataInHexFormat;
