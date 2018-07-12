@@ -16,7 +16,7 @@ void setup() {
   Serial.begin(9600);
 }
 
-double circumference = 0.00446860139 / 20;
+double circumference = 0.00223430069 / 20;
 
 int startTime = 0;
 int endTime = 0;
@@ -50,6 +50,7 @@ void loop() {
         double v = km / hours;
         Serial.print("V: ");
         Serial.println(v);
+        Serial.println("------------------------------------------------------");
         startTime = 0;
         endTime = 0;
       } else {
