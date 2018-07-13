@@ -16,6 +16,7 @@ void setup() {
   Serial.begin(9600);
 }
 
+<<<<<<< HEAD
 double circumference = 0.00446860139 / 20;
 double speedStep = 10.0; //Kmh
 double difSpeed = 0.0; //Kmh
@@ -25,6 +26,8 @@ double heartRate = 0.0; //bpm
 //we ne to get the heartrate live monitored
 double minhr = 90.0; //bpm
 double maxHr = 140.0; //bpm
+double circumference = 0.00223430069 / 20;
+
 
 int startTime = 0;
 int endTime = 0;
@@ -75,7 +78,9 @@ void loop() {
          } else {
              digitalWrite(A1, LOW)//vibromotor-output
          }
-        
+
+        Serial.println("------------------------------------------------------");
+
         startTime = 0;
         endTime = 0;
       } else {

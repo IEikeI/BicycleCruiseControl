@@ -381,10 +381,10 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
                                 bD = bDGReadyForSend.getBicycleDrivers().get(i);
                                 //uartSendData(SEND_SPEED+bD.getSpeed()+ESCAPER, false);
                                 String curSpeed = formatSpeed(bD.getSpeed());
-                                if(curSpeed.matches("^[0-9]{11}$")){
+                                if(curSpeed.matches("^[0-9]+$")){
                                     uartSendData(curSpeed, false);
                                 } else {
-                                    Toast.makeText(UartActivity.this, "Wrong speed format!", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(UartActivity.this, "Wrong speed format!", Toast.LENGTH_SHORT).show();
                                 }
                                 Thread.sleep(sleepTime);
                             } catch (InterruptedException e) {
