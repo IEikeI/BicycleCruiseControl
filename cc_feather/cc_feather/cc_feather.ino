@@ -101,10 +101,9 @@ void setup() {
 
   showPartialUpdateSlowest();
   showPartialUpdateSpeed();
+  showPartialUpdatePulse();
   showPartialUpdateDebug();
   showPartialUpdateSlower();
-
-
  
    // Initialize sensor
   if (!particleSensor.begin(Wire, I2C_SPEED_FAST)) //Use default I2C port, 400kHz speed
@@ -141,7 +140,16 @@ void loop() {
       Serial.println ( (long) mySwitch.getReceivedRawdata() );
 
       //speedOwn = ((double) random(150,280)) / 10;
-      speedSlowest = ((double) random(110,220)) / 10;
+      //speedSlowest = ((double) random(110,220)) / 10;
+
+      int rec = mySwitch.getReceivedValue();
+      // make received int to string
+      String recStr = String(rec);
+      // use only first 3 chars to get an 3-digit int
+      rec = recStr.substring(0,3).toInt();
+
+      speedSlowest = rec;
+      speedSlowest = speedSlowest / 10;
 
       showPartialUpdateSlowest();
       showPartialUpdateSpeed();
@@ -177,7 +185,10 @@ void loop() {
       for (byte x = 0 ; x < RATE_SIZE ; x++)
         beatAvg += rates[x];
       beatAvg /= RATE_SIZE;
+
+      showPartialUpdatePulse();
     }
+
   }
 
   Serial.print("IR=");
@@ -263,9 +274,9 @@ void drawCallbackSlowest()
 void drawCallbackSpeed()
 {
   uint16_t box_x = 80;
-  uint16_t box_y = 110;
+  uint16_t box_y = 80;
   uint16_t box_w = 110;
-  uint16_t box_h = 70;
+  uint16_t box_h = 40;
   uint16_t cursor_y = box_y + 16;
   display.fillRect(box_x, box_y, box_w, box_h, GxEPD_WHITE);
   display.setCursor(box_x, cursor_y);
@@ -277,16 +288,37 @@ void drawCallbackSpeed()
   display.print("km/h \n");
   display.setFont(&FreeMonoBold9pt7b);
   display.setCursor(box_x, cursor_y +47);
-  //display.print("3 Members");
+  //display.print(beatAvg);
+
+}
+
+void drawCallbackPulse()
+{
+  uint16_t box_x = 80;
+  uint16_t box_y = 130;
+  uint16_t box_w = 110;
+  uint16_t box_h = 30;
+  uint16_t cursor_y = box_y + 16;
+  display.fillRect(box_x, box_y, box_w, box_h, GxEPD_WHITE);
+  display.setCursor(box_x, cursor_y);
+  display.print("Pulse: \n");
+  display.setCursor(box_x, cursor_y +16);
+  //display.setFont(&FreeMonoBold12pt7b);
+  
+  display.print(beatAvg);
+  display.print("bpm \n");
+  //display.setFont(&FreeMonoBold9pt7b);
+  //display.setCursor(box_x, cursor_y +47);
+  //display.print(beatAvg);
 
 }
 
 void drawCallbackSlower()
 {
   uint16_t box_x = 80;
-  uint16_t box_y = 60;
+  uint16_t box_y = 50;
   uint16_t box_w = 110;
-  uint16_t box_h = 40;
+  uint16_t box_h = 20;
   uint16_t cursor_y = box_y + 16;
   display.fillRect(box_x, box_y, box_w, box_h, GxEPD_WHITE);
   display.setCursor(box_x, cursor_y);
@@ -339,19 +371,29 @@ void showPartialUpdateSlowest()
 void showPartialUpdateSpeed()
 {
   uint16_t box_x = 80;
-  uint16_t box_y = 110;
+  uint16_t box_y = 80;
   uint16_t box_w = 110;
-  uint16_t box_h = 70;
+  uint16_t box_h = 40;
   uint16_t cursor_y = box_y + 14;
   display.drawPagedToWindow(drawCallbackSpeed, box_x, box_y, box_w, box_h);
+}
+
+void showPartialUpdatePulse()
+{
+  uint16_t box_x = 80;
+  uint16_t box_y = 130;
+  uint16_t box_w = 110;
+  uint16_t box_h = 30;
+  uint16_t cursor_y = box_y + 14;
+  display.drawPagedToWindow(drawCallbackPulse, box_x, box_y, box_w, box_h);
 }
 
 void showPartialUpdateSlower()
 {
   uint16_t box_x = 80;
-  uint16_t box_y = 60;
+  uint16_t box_y = 50;
   uint16_t box_w = 110;
-  uint16_t box_h = 40;
+  uint16_t box_h = 20;
   uint16_t cursor_y = box_y + 14;
   display.drawPagedToWindow(drawCallbackSlower, box_x, box_y, box_w, box_h);
 }
