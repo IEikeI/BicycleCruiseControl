@@ -256,7 +256,7 @@ void loop() {
   if(cntForSendingSpeed++ > 100){
     Serial.println("Sending on 433mhz my speedOwn:");
     Serial.println(speedOwn);
-    mySwitch.send(speedOwn, 24);
+    mySwitch.send((speedOwn*10), 24);
     cntForSendingSpeed = 0;
   }
 
