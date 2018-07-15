@@ -50,9 +50,7 @@ long lastBeat = 0; //Time at which the last beat occurred
 float beatsPerMinute;
 int beatAvg;
 
-
-// D0 on Heltec WiFi Kit 
-int pinVibro = 16;
+int pinVibro = 10;
 
 //measure speed
 double speedSlowest = 18.4;
@@ -66,6 +64,8 @@ int endTime = 0;
 int lastSample = 0;
 
 int cnt = 0;
+
+int cntForSendingSpeed = 0;
 
 void setup() {
   
@@ -93,11 +93,11 @@ void setup() {
   display.drawExampleBitmap(BitmapExample1, sizeof(BitmapExample1), GxEPD::bm_default | GxEPD::bm_partial_update);
   display.setRotation(1);
 
-  // use GPIO pin 5
+  // use GPIO pin 12
   mySwitch.enableReceive(12);  // Receiver on inerrupt 0 => that is pin #2
 
-  // Transmitter is connected to Arduino Pin gpio #3
-  mySwitch.enableTransmit(1);
+  // Transmitter is connected to Arduino Pin
+  mySwitch.enableTransmit(11);
 
   showPartialUpdateSlowest();
   showPartialUpdateSpeed();
@@ -155,8 +155,6 @@ void loop() {
       showPartialUpdateSpeed();
       showPartialUpdateDebug();
       showPartialUpdateSlower();
-
-      mySwitch.send(110, 24);
 
     }
 
@@ -254,6 +252,13 @@ void loop() {
     //Serial.println(sensorValue);
   }
   delay(1);        // delay in between reads for stability
+
+  if(cntForSendingSpeed++ > 100){
+    Serial.println("Sending on 433mhz my speedOwn:");
+    Serial.println(speedOwn);
+    mySwitch.send(speedOwn, 24);
+    cntForSendingSpeed = 0;
+  }
 
 }
 
